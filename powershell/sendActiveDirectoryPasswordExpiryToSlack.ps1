@@ -50,3 +50,23 @@ $users | ForEach-Object {
         Send-Slack-Alert $_
     }
 }
+
+# SEND OVERVIEW TO AD-ADMIN CHANNEL
+$msg = "";
+if($users.Count -eq 0) {
+    $msg = "No users' passwords are expiring within the next "+$warningdays+" days.";
+} else {
+    $msg = "The following users' passwords are expiring soon (or expired):`n" + ($users | Format-Table | Out-String)
+}
+
+$post = @{
+    text = $msg;
+    username = "$domain Password Expiries";
+    icon_emoji = ":key:"
+}
+$json = $post | ConvertTo-Json -Compress
+if($loggish) { $json }
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$resp = Invoke-WebRequest -uri $slackurl -Method POST -Body $json
+if($loggish) { $resp }

@@ -32,6 +32,7 @@ function Send-Slack-Alert {
     if($loggish) { $resp }
 }
 
+$excludes = @("samName1", "samName2", "samName3")
 $filter = { Enabled -eq $True -and PasswordNeverExpires -eq $False }
 
 # FOLLOWING LINE CAN BE USED TO PULL SPECIFIC USER FOR TESTING
@@ -42,7 +43,8 @@ $users = Get-ADUser -Filter $filter -Properties "SamAccountName", "GivenName", "
             @{ Name="SlackID"; Expression={ $_.IPPhone } }, 
             @{ Name="ExpiryDate"; Expression={ [datetime]::FromFileTime($_."msDS-UserPasswordExpiryTimeComputed") } }, 
             @{ Name="ExpiringIn"; Expression={ [datetime]::FromFileTime($_."msDS-UserPasswordExpiryTimeComputed").Subtract((Get-Date)).Days }} |
-         Where-Object ExpiringIn -le $warningdays
+         Where-Object ExpiringIn -le $warningdays | 
+         Where-Object { $excludes -notcontains $_.SamAccountName } 
 if($loggish) { $users }
 
 $users | ForEach-Object {

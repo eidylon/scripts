@@ -25,4 +25,10 @@ processBrowser $srcdir $backupdir
 "Backed up Edge"
 ""
 
+$srcdir = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Sessions"
+$backupdir = "$PSScriptRoot\Chrome"
+processBrowser $srcdir $backupdir
+"Backed up Chrome"
+""
+
 ""

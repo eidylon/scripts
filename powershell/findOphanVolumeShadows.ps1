@@ -20,3 +20,7 @@ Invoke-Command -ComputerName $servers -ScriptBlock {
     }
 
 } -ErrorAction SilentlyContinue
+
+#AFTER RUNNING, ON APPROPRIATE MACHINE OPEN ADMIN CMD
+#RUN "DISKSHADOW", THEN USING THE COPY ID, NOT THE SET ID, RUN
+#DELETE SHADOWS ID {volume-copy-id}

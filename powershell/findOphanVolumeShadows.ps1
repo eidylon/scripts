@@ -1,3 +1,5 @@
+# IDEAL TO RUN ON THE DC
+
 Import-Module ActiveDirectory
 
 $searcher = New-Object DirectoryServices.DirectorySearcher

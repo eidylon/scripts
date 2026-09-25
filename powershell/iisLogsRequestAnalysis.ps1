@@ -5,7 +5,7 @@
 $LogRoot = "D:\wwwroot\logs"
 
 # Leave blank for all sites
-$SiteFilter = "api.igniteintegrationsolutions.com"
+$SiteFilter = "some.domain.com"
 
 # Optional date filters - in machine local time; script will convert and query in UTC
 #$From = $null

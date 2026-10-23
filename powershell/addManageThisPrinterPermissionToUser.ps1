@@ -1,7 +1,7 @@
 # Grant Manage Documents on All Shared Printers
 # Run in an elevated PowerShell session on the print server.
 
-$Account = "mydomain\someuser"   # Change this
+$Account = "domain\user"   # Change this
 $WhatIf  = $true                # Preview first; set to $false to apply
 
 $SID = ([System.Security.Principal.NTAccount]$Account).Translate(
@@ -43,15 +43,25 @@ foreach ($Printer in $Printers) {
             continue
         }
 
-        $SD.DiscretionaryAcl.AddAccess(
-            [System.Security.AccessControl.AccessControlType]::Allow,
-            $SID,
-            $Mask,
-            $Inherit,
-            $Propagation
+        $RawSD = [System.Security.AccessControl.RawSecurityDescriptor]::new(
+            $Printer.PermissionSDDL
         )
 
-        $NewSDDL = $SD.GetSddlForm(
+        $ACE = [System.Security.AccessControl.CommonAce]::new(
+            [System.Security.AccessControl.AceFlags]::None,
+            [System.Security.AccessControl.AceQualifier]::AccessAllowed,
+            $Mask,
+            $SID,
+            $false,
+            $null
+        )
+
+        $RawSD.DiscretionaryAcl.InsertAce(
+            $RawSD.DiscretionaryAcl.Count,
+            $ACE
+        )
+
+        $NewSDDL = $RawSD.GetSddlForm(
             [System.Security.AccessControl.AccessControlSections]::All
         )
 

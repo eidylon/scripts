@@ -38,7 +38,6 @@ function Send-Slack-Alert {
 
 
     $post = @{
-        #channel = "D0104Q77UTZ";
         channel = "#hw-admin";
         text = $Message;
         username = "Redis Memory Load";
